@@ -448,7 +448,7 @@ void sinsp::open_common(scap_open_args* oargs,
 
 	/* Reset the thread manager */
 	m_thread_manager->clear();
-
+	libsinsp_logger()->log("old mode: %v, new mode: %v", m_mode, mode);
 	/* We need to save the actual mode and the engine used by the inspector. */
 	m_mode = mode;
 
