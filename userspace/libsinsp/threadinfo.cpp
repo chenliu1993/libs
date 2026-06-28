@@ -1443,6 +1443,9 @@ const std::shared_ptr<sinsp_threadinfo>& sinsp_thread_manager::add_thread(
 		m_sinsp_stats_v2->m_n_added_threads++;
 	}
 
+	if(tinfo_shared_ptr == nullptr) {
+		libsinsp_logger()->log(std::string("thread put is null, tid is "), sinsp_logger::SEV_INFO);
+	}
 	return m_threadtable.put(tinfo_shared_ptr);
 }
 
@@ -1579,6 +1582,8 @@ void sinsp_thread_manager::remove_thread(int64_t tid) {
 	 */
 	if(thread_to_remove->is_invalid() || thread_to_remove->m_tginfo == nullptr) {
 		thread_to_remove->remove_child_from_parent();
+		libsinsp_logger()->log(std::string("[Before] thread to erase is ") + std::to_string(tid),
+		                       sinsp_logger::SEV_INFO);
 		m_threadtable.erase(tid);
 		m_last_tid = -1;
 		return;

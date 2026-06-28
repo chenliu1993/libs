@@ -39,6 +39,7 @@ struct iovec {
 #include <libsinsp/state/table_adapters.h>
 #include <libsinsp/event.h>
 #include <libscap/scap_savefile_api.h>
+#include <libsinsp/logger.h>
 
 struct erase_fd_params {
 	bool m_remove_from_table;
@@ -656,13 +657,6 @@ public:
 
 	bool const_loop_shared_pointer(const_shared_ptr_visitor_t callback) {
 		for(auto& it : m_threads) {
-			// need to check if it is null
-			// but how it can be null?
-			if(it.second == nullptr) {
-				printf("NOTE!!!thread already is null %lld\n", it.first);
-				continue;
-			}
-			printf("thread info  %lld\n", it.first);
 			if(!callback(it.second)) {
 				return false;
 			}
@@ -672,13 +666,6 @@ public:
 
 	bool const_loop(const_visitor_t callback) const {
 		for(const auto& it : m_threads) {
-			// need to check if it is null
-			// but how it can be null?
-			if(it.second == nullptr) {
-				printf("NOTE!!!thread already is null %lld\n", it.first);
-				continue;
-			}
-			printf("thread info  %lld\n", it.first);
 			if(!callback(*it.second)) {
 				return false;
 			}
@@ -691,10 +678,11 @@ public:
 			// need to check if it is null
 			// but how it can be null?
 			if(it.second == nullptr) {
-				printf("NOTE!!!thread already is null %lld\n", it.first);
+				libsinsp_logger()->log(
+				        std::string("thread already is null, tid is ") + std::to_string(it.first),
+				        sinsp_logger::SEV_INFO);
 				continue;
 			}
-			printf("thread info  %lld\n", it.first);
 			if(!callback(*it.second)) {
 				return false;
 			}
