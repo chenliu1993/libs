@@ -1446,6 +1446,7 @@ const std::shared_ptr<sinsp_threadinfo>& sinsp_thread_manager::add_thread(
 	if(tinfo_shared_ptr == nullptr) {
 		libsinsp_logger()->log(std::string("thread put is null, tid is "), sinsp_logger::SEV_INFO);
 	}
+
 	return m_threadtable.put(tinfo_shared_ptr);
 }
 
