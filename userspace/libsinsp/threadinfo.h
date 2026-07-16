@@ -630,10 +630,11 @@ public:
 	typedef std::function<bool(sinsp_threadinfo&)> visitor_t;
 	typedef std::shared_ptr<sinsp_threadinfo> ptr_t;
 
-	// just for myself debug, start for 0, to calculate how many turns about a loop happens
-	int64_t loop_count = 0;
-
 	inline const ptr_t& put(const ptr_t& tinfo) {
+		if(tinfo.get() == nullptr) {
+			libsinsp_logger()->log(std::string("we are putting a nullptr"), sinsp_logger::SEV_INFO);
+		}
+
 		m_threads[tinfo->m_tid] = tinfo;
 		return m_threads[tinfo->m_tid];
 	}
@@ -677,7 +678,9 @@ public:
 	}
 
 	bool loop(visitor_t callback) {
-		loop_count++;
+		libsinsp_logger()->log(,
+		                       std::string("Current size is") + std::to_string(this->size()),
+		                       sinsp_logger::SEV_DEBUG);
 		for(auto& it : m_threads) {
 			libsinsp_logger()->log(
 			        std::string("Hello there, The thread id being looked upon is " +
@@ -692,6 +695,12 @@ public:
 				libsinsp_logger()->log(
 				        std::string("thread already is null, tid is ") + std::to_string(it.first),
 				        sinsp_logger::SEV_INFO);
+			}
+
+			if(it.second == nullptr) {
+				// Already released
+				m_threads.erase(it.first);
+				continue;
 			}
 
 			if(!callback(*it.second)) {
