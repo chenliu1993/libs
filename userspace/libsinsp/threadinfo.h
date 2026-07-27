@@ -678,17 +678,14 @@ public:
 	}
 
 	bool loop(visitor_t callback) {
-		libsinsp_logger()->log(,
-		                       std::string("Current size is") + std::to_string(this->size()),
+		libsinsp_logger()->log(std::string("Current size is") + std::to_string(this->size()),
 		                       sinsp_logger::SEV_DEBUG);
 		for(auto& it : m_threads) {
-			libsinsp_logger()->log(
-			        std::string("Hello there, The thread id being looked upon is " +
-			                    std::to_string(it.first) +
-			                    std::string(", the size of thread table size is ") +
-			                    std::to_string(this->size()) + std::string(" in loop turn ") +
-			                    std::to_string(loop_count)),
-			        sinsp_logger::SEV_DEBUG);
+			libsinsp_logger()->log(std::string(
+			        "Hello there, The thread id being looked upon is " + std::to_string(it.first) +
+			                std::string(", the size of thread table size is ") +
+			                std::to_string(this->size()) + std::string(" in loop turn "),
+			        sinsp_logger::SEV_DEBUG));
 			// need to check if it is null
 			// but how it can be null?
 			if(it.second == nullptr) {

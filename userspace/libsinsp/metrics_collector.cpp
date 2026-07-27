@@ -254,6 +254,7 @@ libs_state_counters::libs_state_counters(const std::shared_ptr<sinsp_stats_v2>& 
         m_n_threads(0) {
 	if(thread_manager != nullptr) {
 		m_n_threads = thread_manager->get_thread_count();
+		std::cout << "The thread table size when snapshot() happens " << m_n_threads << std::endl;
 		threadinfo_map_t* threadtable = thread_manager->get_threads();
 		if(threadtable != nullptr) {
 			threadtable->loop([this](sinsp_threadinfo& tinfo) {
@@ -434,6 +435,7 @@ void libs_metrics_collector::snapshot() {
 	}
 
 	if((m_metrics_flags & METRICS_V2_STATE_COUNTERS)) {
+		std::cout << "init state_counter enabled" << std::endl;
 		libs_state_counters state_counters(m_sinsp_stats_v2, m_inspector->m_thread_manager.get());
 		std::vector<metrics_v2> sc_metrics = state_counters.to_metrics();
 		m_metrics.insert(m_metrics.end(), sc_metrics.begin(), sc_metrics.end());
